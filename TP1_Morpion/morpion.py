@@ -57,22 +57,27 @@ class TicTacToe:
 # =================================================================
   def undo(self, row: int, column: int):
     self._board[row][column] = None
+    self.currentPlayer = not self.currentPlayer
 # =================================================================
 # =================================================================
   def has_winner(self) -> bool:
     last_player = self.currentPlayer
 
+    # Lignes
     for row in self._board:
       if row == [last_player, last_player, last_player]: 
         return True
     
+    # Colonnes 
     for col in range(3):
-      if(self._board[0][col] == last_player and self._board[1][col] == last_player and self._board[2][col] == last_player):
-        return True
+        if self._board[0][col] == last_player and self._board[1][col] == last_player and self._board[2][col] == last_player:
+          return True
     
+    # Diagonale
     if(self._board[0][0] == last_player and self._board[1][1] == last_player and self._board[2][2] == last_player):
       return True
     
+    # Diagonale
     if(self._board[0][2] == last_player and self._board[1][1] == last_player and self._board[2][0]):
       return True
     
@@ -101,3 +106,5 @@ class TicTacToe:
           moves.append(move_number)
 
     return moves
+# =================================================================
+# =================================================================
