@@ -1,21 +1,23 @@
 class TicTacToe:
   def __init__(self):
-    board = self.create_board()
-    self.currentPlayer = True  # True : X; False : O
-    self._board = board
-
-# =================================================================
-# =================================================================
-  def create_board() -> list[list[str]]:
-    return [
+    board = [
         [
             None for _ in range(3)
         ] for _ in range(3)
     ]
-    
+    self.currentPlayer = True  # True : X; False : O
+    self._board = board
+
+# =================================================================
+# =================================================================    
   def reset(self):
-    self._board = self.create_board()
-    self.currentPlayer = True
+    board = [
+        [
+            None for _ in range(3)
+        ] for _ in range(3)
+    ]
+    self.currentPlayer = True  # True : X; False : O
+    self._board = board
 # =================================================================
 # =================================================================
   def play(self, number: int) -> bool:
