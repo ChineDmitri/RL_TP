@@ -1,0 +1,5 @@
+while not game.has_winner() and not game.is_draw():
+    opponent_random(game)
+    print(game)
+    if game.has_winner() or game.is_draw():
+        break
