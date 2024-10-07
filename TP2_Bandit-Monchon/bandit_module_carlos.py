@@ -91,3 +91,11 @@ class GreedyPlayer():
         # Mise à jour de la moyenne
         self.action_values[action] += (reward - self.action_values[action]) / self.eval_count[action]
     
+
+
+# =============================================================================
+# "Heritage de GreedyPlayer"
+class OptimistGreedyPlayer(GreedyPlayer):
+    def __init__(self, num_actions, epsilon):
+        super().__init__(num_actions, epsilon)
+        self.Q = [5] * num_actions
