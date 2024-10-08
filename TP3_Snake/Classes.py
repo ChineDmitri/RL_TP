@@ -36,13 +36,13 @@ class ShortSnake:
         self.snake_pos = new_head
 
     def __str__(self):
-        grid_str = ' . '
+        grid_str = ''
         for i in range(self.grid_size):
             for j in range(self.grid_size):
                 if [i, j] == self.snake_pos:
-                    grid_str += 'S'
+                    grid_str += '🐍 '
                 elif [i, j] == self.fruit_pos:
-                    grid_str += 'F'
+                    grid_str += '🍏 '
                 else:
                     grid_str += ' . '
             grid_str += '\n'
