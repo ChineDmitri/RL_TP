@@ -244,14 +244,77 @@ class ShortSnake:
 #         new_q = current_q + self.alpha * (reward + self.gamma * max_next_q - current_q)
 #         self.q_values[state][action] = new_q
 
+# class GreedyPlayer:
+#     def __init__(self, snake_game, eps=0.1, alpha=0.1, gamma=0.5):
+#         """
+#         snake_game: instance de ShortSnake
+#         eps: taux d'exploration
+#         alpha: taux d'apprentissage
+#         gamma: facteur d'actualisation
+#         """
+#         self.snake_game = snake_game
+#         self.actions = ['up', 'down', 'left', 'right']
+#         self.eps = eps
+#         self.alpha = alpha
+#         self.gamma = gamma
+#         self.q_values = {}  # Table Q pour stocker les valeurs d'état-action
+
+#     def get_action(self, state):
+#         """
+#         Choisir une action basée sur l'état actuel
+#         """
+#         if random.random() < self.eps:
+#             return self._random_action()
+#         else:
+#             return self._greedy_action(state)
+
+#     def _greedy_action(self, state):
+#         """
+#         Choisir l'action avec la meilleure valeur Q pour l'état donné
+#         """
+#         state_key = self._get_state_key(state)
+#         if state_key not in self.q_values:
+#             return self._random_action()
+        
+#         q_values = self.q_values[state_key]
+#         max_q = max(q_values.values())
+#         best_actions = [action for action, value in q_values.items() if value == max_q]
+#         return random.choice(best_actions)
+
+#     def _random_action(self):
+#         """
+#         Choisir une action aléatoire
+#         """
+#         return random.choice(self.actions)
+
+#     def update(self, state, action, reward, next_state):
+#         """
+#         Mettre à jour la valeur Q pour un couple état-action selon la formule du Q-Learning
+#         """
+#         state_key = self._get_state_key(state)
+#         next_state_key = self._get_state_key(next_state)
+
+#         if state_key not in self.q_values:
+#             self.q_values[state_key] = {a: 0 for a in self.actions}
+        
+#         if next_state_key not in self.q_values:
+#             self.q_values[next_state_key] = {a: 0 for a in self.actions}
+        
+#         current_q = self.q_values[state_key][action]
+#         max_next_q = max(self.q_values[next_state_key].values())
+        
+#         new_q = current_q + self.alpha * (reward + self.gamma * max_next_q - current_q)
+#         self.q_values[state_key][action] = new_q
+
+#     def _get_state_key(self, state):
+#         """
+#         Convertir l'état en une clé hashable pour la table Q
+#         """
+#         return (tuple(state[0]), tuple(state[1]))
+
+
 class GreedyPlayer:
-    def __init__(self, snake_game, eps=0.1, alpha=0.1, gamma=0.5):
-        """
-        snake_game: instance de ShortSnake
-        eps: taux d'exploration
-        alpha: taux d'apprentissage
-        gamma: facteur d'actualisation
-        """
+    def __init__(self, snake_game, eps=0.1, alpha=0.5, gamma=0.9):
         self.snake_game = snake_game
         self.actions = ['up', 'down', 'left', 'right']
         self.eps = eps
@@ -259,22 +322,17 @@ class GreedyPlayer:
         self.gamma = gamma
         self.q_values = {}  # Table Q pour stocker les valeurs d'état-action
 
-    def get_action(self, state):
-        """
-        Choisir une action basée sur l'état actuel
-        """
+    def get_action(self):
+        state = self.snake_game.get_state()
         if random.random() < self.eps:
             return self._random_action()
         else:
             return self._greedy_action(state)
 
     def _greedy_action(self, state):
-        """
-        Choisir l'action avec la meilleure valeur Q pour l'état donné
-        """
         state_key = self._get_state_key(state)
         if state_key not in self.q_values:
-            return self._random_action()
+            self.q_values[state_key] = {a: 0 for a in self.actions}
         
         q_values = self.q_values[state_key]
         max_q = max(q_values.values())
@@ -282,32 +340,26 @@ class GreedyPlayer:
         return random.choice(best_actions)
 
     def _random_action(self):
-        """
-        Choisir une action aléatoire
-        """
         return random.choice(self.actions)
 
-    def update(self, state, action, reward, next_state):
-        """
-        Mettre à jour la valeur Q pour un couple état-action selon la formule du Q-Learning
-        """
+    def reward(self, action, reward):
+        state = self.snake_game.get_state()
         state_key = self._get_state_key(state)
-        next_state_key = self._get_state_key(next_state)
 
         if state_key not in self.q_values:
             self.q_values[state_key] = {a: 0 for a in self.actions}
-        
+
+        next_state, _, _ = self.snake_game.step(action)
+        next_state_key = self._get_state_key(next_state)
+
         if next_state_key not in self.q_values:
             self.q_values[next_state_key] = {a: 0 for a in self.actions}
-        
+
         current_q = self.q_values[state_key][action]
         max_next_q = max(self.q_values[next_state_key].values())
-        
+
         new_q = current_q + self.alpha * (reward + self.gamma * max_next_q - current_q)
         self.q_values[state_key][action] = new_q
 
     def _get_state_key(self, state):
-        """
-        Convertir l'état en une clé hashable pour la table Q
-        """
         return (tuple(state[0]), tuple(state[1]))
